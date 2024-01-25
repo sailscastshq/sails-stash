@@ -1,0 +1,16 @@
+{
+  "name": "cache-sails",
+  "version": "0.0.0",
+  "description": "Efficient and intuitive caching for your Sails applications.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": ["caching", "sails", "sails-hook", "cache", "redis", "memcache"],
+  "author": "Kelvin Omereshone<kelvin@sailscasts.com>",
+  "license": "MIT",
+  "sails": {
+    "isHook": true,
+    "hookName": "cache"
+  }
+}
