@@ -1,5 +1,5 @@
 {
-  "name": "cache-sails",
+  "name": "sails-stash",
   "version": "0.0.0",
   "description": "Efficient and intuitive caching for your Sails applications.",
   "main": "index.js",
