@@ -4,32 +4,31 @@ module.exports = function defineSailsCacheHook(sails) {
   return {
     defaults: {
       stash: {
-        store: process.env.CACHE_STORE || 'redis',
-        stores: {
-          redis: {
-            store: 'redis',
-            datastore: 'cache',
-          },
-          memcached: {
-            store: 'memcached',
-            datastore: 'cache',
-          },
+        cachestore: 'default',
+      },
+      cachestores: {
+        default: {
+          store: 'redis',
+          datastore: 'cache',
         },
       },
     },
     initialize: async function () {
-      function getCacheStore(store) {
-        switch (sails.config.stash.stores[store].store) {
+      function getCacheStore(cachestore) {
+        if (!sails.config.cachestores[cachestore]) {
+          throw new Error('The provided cachestore coult not be found.')
+        }
+        switch (sails.config.cachestores[cachestore].store) {
           case 'redis':
             return new RedisStore(sails)
           default:
-            throw new Error('Invalid cache store provided')
+            throw new Error(
+              'Invalid store provided, supported stores are redis or memcached.',
+            )
         }
       }
 
-      let cacheStore = getCacheStore(
-        sails.config.stash.stores[sails.config.stash.store].store,
-      )
+      let cacheStore = getCacheStore(sails.config.stash.cachestore)
 
       sails.cache = {
         get: cacheStore.get.bind(cacheStore),
@@ -41,8 +40,8 @@ module.exports = function defineSailsCacheHook(sails) {
         pull: cacheStore.pull.bind(cacheStore),
         forever: cacheStore.forever.bind(cacheStore),
         destroy: cacheStore.destroy.bind(cacheStore),
-        store: function (store) {
-          return getCacheStore(store)
+        store: function (cachestore) {
+          return getCacheStore(cachestore)
         },
       }
     },
