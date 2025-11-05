@@ -1,4 +1,5 @@
 const RedisStore = require('./lib/stores/redis-store')
+const MemoryStore = require('./lib/stores/memory-store')
 
 module.exports = function defineSailsCacheHook(sails) {
   return {
@@ -8,8 +9,7 @@ module.exports = function defineSailsCacheHook(sails) {
       },
       cachestores: {
         default: {
-          store: 'redis',
-          datastore: 'cache',
+          store: 'memory',
         },
       },
     },
@@ -19,16 +19,31 @@ module.exports = function defineSailsCacheHook(sails) {
           throw new Error('The provided cachestore coult not be found.')
         }
         switch (sails.config.cachestores[cachestore].store) {
+          case 'memory':
+            return new MemoryStore(sails)
           case 'redis':
             return new RedisStore(sails)
           default:
             throw new Error(
-              'Invalid store provided, supported stores are redis or memcached.',
+              'Invalid store provided, supported stores are memory and redis.',
             )
         }
       }
 
       let cacheStore = getCacheStore(sails.config.stash.cachestore)
+
+      if (
+        sails.config.cachestores[sails.config.stash.cachestore].store ===
+          'memory' &&
+        process.env.NODE_ENV === 'production'
+      ) {
+        sails.log.warn(
+          'Sails Stash is using the memory store in production. ' +
+            'This is not recommended for production environments. ' +
+            'Consider switching to a persistent cache store. ' +
+            'See: https://docs.sailscasts.com/sails-stash/redis',
+        )
+      }
 
       sails.cache = {
         get: cacheStore.get.bind(cacheStore),
