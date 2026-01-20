@@ -35,7 +35,7 @@ module.exports = function defineSailsCacheHook(sails) {
       if (
         sails.config.cachestores[sails.config.stash.cachestore].store ===
           'memory' &&
-        process.env.NODE_ENV === 'production'
+        sails.config.environment === 'production'
       ) {
         sails.log.warn(
           'Sails Stash is using the memory store in production. ' +
