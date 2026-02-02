@@ -1,5 +1,6 @@
 const RedisStore = require('./lib/stores/redis-store')
 const MemoryStore = require('./lib/stores/memory-store')
+const SQLiteStore = require('./lib/stores/sqlite-store')
 
 module.exports = function defineSailsCacheHook(sails) {
   return {
@@ -23,9 +24,11 @@ module.exports = function defineSailsCacheHook(sails) {
             return new MemoryStore(sails)
           case 'redis':
             return new RedisStore(sails)
+          case 'sqlite':
+            return new SQLiteStore(sails)
           default:
             throw new Error(
-              'Invalid store provided, supported stores are memory and redis.',
+              'Invalid store provided, supported stores are memory, redis, and sqlite.',
             )
         }
       }
