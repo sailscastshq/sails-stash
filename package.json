@@ -1,6 +1,6 @@
 {
   "name": "sails-stash",
-  "version": "0.1.1",
+  "version": "0.2.0",
   "description": "Efficient and intuitive caching for your Sails applications.",
   "main": "index.js",
   "scripts": {
@@ -13,7 +13,9 @@
     "sails-hook",
     "cache",
     "redis",
-    "memcached"
+    "memcached",
+    "in-memory",
+    "sqlite"
   ],
   "author": "Kelvin Omereshone<kelvin@sailscasts.com>",
   "license": "MIT",
